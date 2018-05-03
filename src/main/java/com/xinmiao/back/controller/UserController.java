@@ -3,6 +3,7 @@ package com.xinmiao.back.controller;
 
 import com.xinmiao.back.config.shiro.ExceptionHandledController;
 import com.xinmiao.back.config.status.AuthorStatus;
+import com.xinmiao.back.domain.User;
 import com.xinmiao.back.dto.RegisterUser;
 import com.xinmiao.back.dto.RespJson;
 import com.xinmiao.back.mapper.UserMapper;
@@ -42,5 +43,12 @@ public class UserController extends ExceptionHandledController {
         }
         return respJson;
     }
+
+
+    @RequestMapping("/register")
+    public Boolean register(@RequestBody User user){
+        return false;
+    }
+
 
 }
