@@ -1,10 +1,12 @@
 package com.xinmiao.back.domain;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
-public class User {
+public class User implements Serializable {
     @Id
     @Column(name = "user_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer userId;
 
     @Column(name = "user_name")
@@ -18,6 +20,20 @@ public class User {
 
     @Column(name = "user_type")
     private String userType;
+
+    @Column(name = "token")
+    private String token;
+
+    @Column(name = "user_icon")
+    private String userIcon;
+
+    public String getUserIcon() {
+        return userIcon;
+    }
+
+    public void setUserIcon(String userIcon) {
+        this.userIcon = userIcon;
+    }
 
     /**
      * @return user_id
@@ -87,5 +103,13 @@ public class User {
      */
     public void setUserType(String userType) {
         this.userType = userType == null ? null : userType.trim();
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

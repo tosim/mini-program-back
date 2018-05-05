@@ -14,12 +14,13 @@
     <result column="company_ceo" jdbcType="VARCHAR" property="companyCeo" />
     <result column="company_url" jdbcType="VARCHAR" property="companyUrl" />
     <result column="company_type" jdbcType="INTEGER" property="companyType" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
   </resultMap>
   <sql id="Base_Column_List">
     <!--
       WARNING - @mbg.generated
     -->
     company_id, company_name, company_description, company_address, company_tags, book_img, 
-    company_ceo, company_url, company_type
+    company_ceo, company_url, company_type, user_id
   </sql>
 </mapper>

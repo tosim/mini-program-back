@@ -10,11 +10,12 @@
     <result column="user_passwd" jdbcType="VARCHAR" property="userPasswd" />
     <result column="user_wx" jdbcType="VARCHAR" property="userWx" />
     <result column="user_type" jdbcType="VARCHAR" property="userType" />
+    <result column="user_icon" jdbcType="VARCHAR" property="userIcon" />
   </resultMap>
   <sql id="Base_Column_List">
     <!--
       WARNING - @mbg.generated
     -->
-    user_id, user_name, user_passwd, user_wx, user_type
+    user_id, user_name, user_passwd, user_wx, user_type,user_icon
   </sql>
 </mapper>

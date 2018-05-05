@@ -1,6 +1,7 @@
 package com.xinmiao.back.domain;
 
 import javax.persistence.*;
+import java.util.List;
 
 public class Scene {
     @Id

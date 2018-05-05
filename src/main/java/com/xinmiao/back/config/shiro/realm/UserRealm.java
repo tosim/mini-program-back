@@ -14,25 +14,37 @@ public class UserRealm extends MyShiroRealm {
         //log.debug("登录时候的认证～～～"+"username = " + String.valueOf(token.getPrincipal()) + ", pass = " + new String((char[])token.getCredentials()));
         String username = (String) token.getPrincipal();
         String password = new String((char[]) token.getCredentials());
-        User user = userMapper.selectByTelephone(username);
-        if (user == null) throw new UnknownAccountException();
-        if (true == user.getIsLocked()) {
-            throw new LockedAccountException(); // 帐号锁定
+        User user = userMapper.selectUserByUserName(username);
+        int isWxlogin = 0;
+        if (user == null){
+            isWxlogin = 1;
+            user = userMapper.selectByWx(username);
+            //如果是微信号登录
+            /*if(user == null){
+                //如果没有这个用户，插入
+                user = new User();
+                user.setUserWx(username);
+                user.setUserPasswd("");
+                userMapper.insertSelective(user);
+            }*/
+        }
+        String pass;
+
+        if(isWxlogin == 1){
+            pass = password;
+        }else{
+            pass = user.getUserPasswd();
         }
         SimpleAuthenticationInfo authenticationInfo;
         authenticationInfo = new SimpleAuthenticationInfo(
                 user, //用户
-                user.getPasswd(), //使用密码作为登录凭据
+                pass, //正确密码
                 ByteSource.Util.bytes(username),
                 getName()  //realm name
         );
 
-        String encryptPassword = PasswordHelper.encryptPassword(password, username);
         //如果登录成功
-        if (encryptPassword.equals(user.getPasswd())) {
-            updateUserAndClearOldUserCache(user);
-        }
-
+        updateUserAndClearOldUserCache(user);
         return authenticationInfo;
     }
 

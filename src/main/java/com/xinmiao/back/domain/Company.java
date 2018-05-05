@@ -31,9 +31,23 @@ public class Company {
     @Column(name = "company_type")
     private Integer companyType;
 
+
+    @Column(name = "user_id")
+    private Integer userId;
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
     /**
      * @return company_id
      */
+
+
     public Integer getCompanyId() {
         return companyId;
     }

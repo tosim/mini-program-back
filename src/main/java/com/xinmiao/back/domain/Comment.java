@@ -20,6 +20,25 @@ public class Comment {
     @Column(name = "coment_time")
     private Date comentTime;
 
+    private String userIcon;
+    private String userWx;
+
+    public String getUserIcon() {
+        return userIcon;
+    }
+
+    public void setUserIcon(String userIcon) {
+        this.userIcon = userIcon;
+    }
+
+    public String getUserWx() {
+        return userWx;
+    }
+
+    public void setUserWx(String userWx) {
+        this.userWx = userWx;
+    }
+
     /**
      * @return comment_id
      */

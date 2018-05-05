@@ -12,13 +12,9 @@ public class TokenRealm extends MyShiroRealm {
 
         String username = (String)token.getPrincipal();
         String password = new String((char[])token.getCredentials());
-        User user = userMapper.selectByTelephone(username);
+        User user = userMapper.selectByWx(username);
 
         if(user==null) throw new UnknownAccountException();
-
-        if (true==user.getIsLocked()) {
-            throw new LockedAccountException(); // 帐号锁定
-        }
 
         SimpleAuthenticationInfo authenticationInfo;
         authenticationInfo = new SimpleAuthenticationInfo(

@@ -5,6 +5,7 @@ package com.xinmiao.back.controller;
 import com.xinmiao.back.config.shiro.ExceptionHandledController;
 import com.xinmiao.back.config.shiro.realm.UsernamePasswordLoginTypeToken;
 import com.xinmiao.back.config.status.AuthorStatus;
+import com.xinmiao.back.domain.User;
 import com.xinmiao.back.dto.LoginToken;
 import com.xinmiao.back.dto.RespJson;
 import com.xinmiao.back.mapper.UserMapper;
@@ -34,8 +35,23 @@ public class SessionController extends ExceptionHandledController {
         RespJson respJson = new RespJson();
         Subject subject = SecurityUtils.getSubject();
 //        System.out.println("tele = " + loginToken.getTelephoneNumber()+" passwd = " + loginToken.getPasswd());
-        UsernamePasswordLoginTypeToken token = new UsernamePasswordLoginTypeToken(loginToken.getTelephoneNumber(), loginToken.getPasswd(),loginToken.getLoginType());
         try {
+            User user = userMapper.selectUserByUserName(loginToken.getTelephoneNumber());
+            int isWxlogin = 0;
+            if (user == null){
+                isWxlogin = 1;
+                user = userMapper.selectByWx(loginToken.getTelephoneNumber());
+                //如果是微信号登录
+                if(user == null){
+                    //如果没有这个用户，插入
+                    user = new User();
+                    user.setUserWx(loginToken.getTelephoneNumber());
+                    user.setUserPasswd("");
+                    user.setUserIcon(loginToken.getUserIcon());
+                    userMapper.insertSelective(user);
+                }
+            }
+            UsernamePasswordLoginTypeToken token = new UsernamePasswordLoginTypeToken(loginToken.getTelephoneNumber(), loginToken.getPasswd(),loginToken.getLoginType());
             subject.login(token);
             Map<String,Object> data = new HashMap<String,Object>();
             data.put("token",subject.getSession().getId());

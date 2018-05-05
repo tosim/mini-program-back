@@ -56,15 +56,17 @@ public class ShiroConfig {
         // 必须设置 SecurityManager
         shiroFilterFactoryBean.setSecurityManager(securityManager);
 
+        /*
         KickoutSessionControlFilter kickoutSessionControlFilter = new KickoutSessionControlFilter();
         kickoutSessionControlFilter.setCacheManager(shiroCacheManager());
         kickoutSessionControlFilter.setSessionManager(sessionManager());
         kickoutSessionControlFilter.setKickoutUrl("/api/sessions/authLose"); //配置登录失效的重定向路径
         shiroFilterFactoryBean.getFilters().put("kickout",kickoutSessionControlFilter);
+        */
 
         Map<String,String> filterChainDefinitionMap = new LinkedHashMap<String,String>();
 
-        filterChainDefinitionMap.put("/api/**", "kickout");
+        filterChainDefinitionMap.put("/api/**", "anon");
 
         filterChainDefinitionMap.put("/**", "anon");
         //配置shiro默认登录界面地址，前后端分离中登录界面跳转应由前端路由控制，后台仅返回json数据
@@ -81,6 +83,7 @@ public class ShiroConfig {
      * ）
      * @return
      */
+    /*
     @Bean
     public HashedCredentialsMatcher hashedCredentialsMatcher(){
         HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
@@ -88,12 +91,13 @@ public class ShiroConfig {
         hashedCredentialsMatcher.setHashIterations(2);//散列的次数，比如散列两次，相当于 md5(md5(""));
         return hashedCredentialsMatcher;
     }
+    */
 
     @Bean
     public UserRealm userRealm(){
         UserRealm userRealm = new UserRealm();
         userRealm.setCacheManager(shiroCacheManager());
-        userRealm.setCredentialsMatcher(hashedCredentialsMatcher());//为此realm设置凭证匹配器
+        //userRealm.setCredentialsMatcher(hashedCredentialsMatcher());//为此realm设置凭证匹配器
         //设置此realm只接受TelephoneAndPasswd类型的认证凭证
         userRealm.setSupportedLoginType(SupportedLoginType.TelephoneAndPasswd.getCode());//
         userRealm.setName("userRealm");
@@ -104,7 +108,7 @@ public class ShiroConfig {
     public TokenRealm tokenRealm(){
         TokenRealm tokenRealm = new TokenRealm();
         tokenRealm.setCacheManager(shiroCacheManager());
-        tokenRealm.setCredentialsMatcher(hashedCredentialsMatcher());//为此realm设置凭证匹配器
+        //tokenRealm.setCredentialsMatcher(hashedCredentialsMatcher());//为此realm设置凭证匹配器
         //设置此realm只接受TelephoneAndToken类型的认证凭证
         tokenRealm.setSupportedLoginType(SupportedLoginType.TelephoneAndToken.getCode());
 

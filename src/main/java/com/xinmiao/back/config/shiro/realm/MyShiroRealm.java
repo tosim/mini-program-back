@@ -189,24 +189,25 @@ public abstract class MyShiroRealm extends AuthorizingRealm {
         tmp.add(user.getUserId());
         clearUserAuthByUserId(tmp);//清除之前的授权信息
 
+        /*
         //清除之前的session信息（在之前的session中设置kickout信息）
         Cache<String, String> cache = cacheManager.getCache("shiro-kickout-session");
-        String kickSessionId = cache.get(user.getTelephoneNumber());//获得要踢出的sessionId;
+        String kickSessionId = cache.get(user.getUserWx());//获得要踢出的sessionId;
         Session kickoutSession = securityManager.getSession(new DefaultSessionKey(kickSessionId));
         if (kickoutSession != null) {
             //设置会话的kickout属性表示踢出了
             kickoutSession.setAttribute("kickout", true);
         }
-        cache.put(user.getTelephoneNumber(), session.getId().toString());//设置新的sessionId
+        cache.put(user.getUserWx(), session.getId().toString());//设置新的sessionId
+        */
 
         //更新数据库中user的token
-//            user.setToken(PasswordHelper.encryptPassword(session.getId().toString(),user.getTelephoneNumber()));
-//            user.setToken(session.getId().toString());//token存储不加密
-//            userMapper.updateByPrimaryKeySelective(user);//更新数据库token
+            user.setToken(session.getId().toString());
+            userMapper.updateTokenByWx(user.getUserWx(),session.getId().toString());//更新数据库token
 
-        String newToken = PasswordHelper.encryptPassword(session.getId().toString(), user.getTelephoneNumber());
+        String newToken = PasswordHelper.encryptPassword(session.getId().toString(), user.getUserWx());
         System.out.println("newToken = " + newToken);
-        userMapper.updateTokenByTelephone(newToken, user.getTelephoneNumber());
+        userMapper.updateTokenByWx(newToken, user.getUserWx());
 
         System.out.println("update table user" + user.getUserId() + " token" + user.getToken());
         //将用户信息存入session缓存

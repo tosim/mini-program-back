@@ -4,6 +4,15 @@ public class LoginToken {
     private String telephoneNumber;
     private String passwd;
     private Integer loginType;
+    private String userIcon;
+
+    public String getUserIcon() {
+        return userIcon;
+    }
+
+    public void setUserIcon(String userIcon) {
+        this.userIcon = userIcon;
+    }
 
     public Integer getLoginType() {
         return loginType;

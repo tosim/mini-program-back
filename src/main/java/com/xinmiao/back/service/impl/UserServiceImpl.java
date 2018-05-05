@@ -6,6 +6,7 @@ import com.xinmiao.back.domain.User;
 import com.xinmiao.back.dto.RegisterUser;
 import com.xinmiao.back.mapper.UserMapper;
 import com.xinmiao.back.service.UserService;
+import com.xinmiao.back.util.PasswordHelper;
 import com.xinmiao.back.util.RedisUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -23,22 +24,37 @@ public class UserServiceImpl implements UserService {
     private RedisUtils redisUtils;
 
 
+    public Boolean registerOnWx(String wx){
+        User user = new User();
+        user.setUserWx(wx);
+        UsernamePasswordLoginTypeToken token = new UsernamePasswordLoginTypeToken(user.getUserWx(),"",SupportedLoginType.TelephoneAndPasswd.getCode());
+        return true;
+    }
+
     public Boolean register(RegisterUser registerUser) {
-        if(registerUser.getTelephoneNumber() == null || registerUser.getVeCode() == null){
+        if(registerUser.getWx() == null){
             return false;
         }
 
-        User existUser = userMapper.selectByTelephone(registerUser.getTelephoneNumber());
-        if(existUser != null){
+        User existUser = userMapper.selectByWx(registerUser.getWx());
+        if(existUser != null && !existUser.getUserName().equals("")){
             return false;
         }
-
         User insertUser = new User();
-        insertUser.setTelephoneNumber(registerUser.getTelephoneNumber());
-        userMapper.insertSelective(insertUser);
+
+        insertUser.setUserWx(registerUser.getWx());
+        insertUser.setUserName(registerUser.getUserName());
+        insertUser.setUserPasswd(registerUser.getPasswd());
+        insertUser.setUserType(registerUser.getUserType());
+
+        if(existUser != null){
+            insertUser.setUserId(existUser.getUserId());
+            userMapper.updateByPrimaryKeySelective(insertUser);
+        }else {
+            userMapper.insertSelective(insertUser);
+        }
         Subject subject = SecurityUtils.getSubject();
-        String cachedVeCode = (String)redisUtils.get("sys_cached_vecode:"+insertUser.getTelephoneNumber());
-        UsernamePasswordLoginTypeToken token = new UsernamePasswordLoginTypeToken(insertUser.getTelephoneNumber(), cachedVeCode,SupportedLoginType.TelephoneAndVerifyCode.getCode());
+        UsernamePasswordLoginTypeToken token = new UsernamePasswordLoginTypeToken(insertUser.getUserName(),insertUser.getUserPasswd(),SupportedLoginType.TelephoneAndPasswd.getCode());
         return true;
     }
 

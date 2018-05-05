@@ -10,6 +10,7 @@ import com.xinmiao.back.mapper.UserMapper;
 import com.xinmiao.back.service.UserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,7 +20,7 @@ import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 
-@RestController
+@Controller
 @RequestMapping("/api/users")
 public class UserController extends ExceptionHandledController {
     @Resource
@@ -28,7 +29,7 @@ public class UserController extends ExceptionHandledController {
     private UserService userService;
 
     @RequestMapping(value = "",method = RequestMethod.POST)
-    public RespJson register(@RequestBody RegisterUser registerUser){
+    public String register(/*@RequestBody*/ RegisterUser registerUser){
         RespJson respJson = new RespJson(null,"",200);
         if(userService.register(registerUser)){
             Subject subject = SecurityUtils.getSubject();
@@ -41,14 +42,6 @@ public class UserController extends ExceptionHandledController {
             respJson.setMsg(AuthorStatus.REGISTER_FAILED_REPEATED_ACCOUNT.name());
             respJson.setCode(AuthorStatus.REGISTER_FAILED_REPEATED_ACCOUNT.getCode());
         }
-        return respJson;
+        return null;
     }
-
-
-    @RequestMapping("/register")
-    public Boolean register(@RequestBody User user){
-        return false;
-    }
-
-
 }

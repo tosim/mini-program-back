@@ -1,22 +1,40 @@
 package com.xinmiao.back.dto;
 
 public class RegisterUser {
-    private String telephoneNumber;
-    private String veCode;
+    private String wx;
+    private String userName;
+    private String passwd;
+    private String userType;
 
-    public String getTelephoneNumber() {
-        return telephoneNumber;
+    public String getUserType() {
+        return userType;
     }
 
-    public void setTelephoneNumber(String telephoneNumber) {
-        this.telephoneNumber = telephoneNumber;
+    public void setUserType(String userType) {
+        this.userType = userType;
     }
 
-    public String getVeCode() {
-        return veCode;
+    public String getWx() {
+        return wx;
     }
 
-    public void setVeCode(String veCode) {
-        this.veCode = veCode;
+    public void setWx(String wx) {
+        this.wx = wx;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPasswd() {
+        return passwd;
+    }
+
+    public void setPasswd(String passwd) {
+        this.passwd = passwd;
     }
 }
