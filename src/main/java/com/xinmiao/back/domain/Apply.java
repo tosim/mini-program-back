@@ -28,6 +28,16 @@ public class Apply {
     @Column(name = "is_read")
     private Integer isRead;
 
+    private String applyCompanyName;
+
+    public String getApplyCompanyName() {
+        return applyCompanyName;
+    }
+
+    public void setApplyCompanyName(String applyCompanyName) {
+        this.applyCompanyName = applyCompanyName;
+    }
+
     /**
      * @return apply_id
      */

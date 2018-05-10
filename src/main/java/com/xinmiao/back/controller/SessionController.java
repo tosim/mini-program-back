@@ -5,9 +5,11 @@ package com.xinmiao.back.controller;
 import com.xinmiao.back.config.shiro.ExceptionHandledController;
 import com.xinmiao.back.config.shiro.realm.UsernamePasswordLoginTypeToken;
 import com.xinmiao.back.config.status.AuthorStatus;
+import com.xinmiao.back.domain.Company;
 import com.xinmiao.back.domain.User;
 import com.xinmiao.back.dto.LoginToken;
 import com.xinmiao.back.dto.RespJson;
+import com.xinmiao.back.mapper.CompanyMapper;
 import com.xinmiao.back.mapper.UserMapper;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -28,9 +30,11 @@ import java.util.Map;
 public class SessionController extends ExceptionHandledController {
     @Resource
     UserMapper userMapper;
+    @Resource
+    CompanyMapper companyMapper;
 
     //登录
-    @RequestMapping(value = "",method = RequestMethod.POST)
+    @PostMapping("")
     public RespJson login(@RequestBody LoginToken loginToken){
         RespJson respJson = new RespJson();
         Subject subject = SecurityUtils.getSubject();
@@ -48,6 +52,7 @@ public class SessionController extends ExceptionHandledController {
                     user.setUserWx(loginToken.getTelephoneNumber());
                     user.setUserPasswd("");
                     user.setUserIcon(loginToken.getUserIcon());
+                    user.setUserType("1");
                     userMapper.insertSelective(user);
                 }
             }
@@ -55,6 +60,8 @@ public class SessionController extends ExceptionHandledController {
             subject.login(token);
             Map<String,Object> data = new HashMap<String,Object>();
             data.put("token",subject.getSession().getId());
+            User I = userMapper.selectByWx(user.getUserWx());
+            data.put("user",I);
             respJson.setData(data);
             respJson.setMsg("登录成功");
             respJson.setCode(200);
@@ -70,27 +77,27 @@ public class SessionController extends ExceptionHandledController {
         return respJson;
     }
 
-    @RequiresUser
-    @RequestMapping(value = "/sessions/{id}",method = RequestMethod.DELETE)
-    public RespJson logout(@PathVariable String id){
-        Subject subject = SecurityUtils.getSubject();
-        RespJson respJson = new RespJson(null,null,1001);
-        Session session = subject.getSession(false);
-        if(session == null){
-            respJson.setMsg("用户未登录");
-            return respJson;
-        }
-
-        if(session.getId().equals(id)){
-            subject.logout();
-            respJson.setMsg("注销成功");
-            respJson.setCode(200);
-            return respJson;
-        }else {
-            respJson.setMsg("错误的id");
-            return respJson;
-        }
-    }
+//    @RequiresUser
+//    @RequestMapping(value = "/sessions/{id}",method = RequestMethod.DELETE)
+//    public RespJson logout(@PathVariable String id){
+//        Subject subject = SecurityUtils.getSubject();
+//        RespJson respJson = new RespJson(null,null,1001);
+//        Session session = subject.getSession(false);
+//        if(session == null){
+//            respJson.setMsg("用户未登录");
+//            return respJson;
+//        }
+//
+//        if(session.getId().equals(id)){
+//            subject.logout();
+//            respJson.setMsg("注销成功");
+//            respJson.setCode(200);
+//            return respJson;
+//        }else {
+//            respJson.setMsg("错误的id");
+//            return respJson;
+//        }
+//    }
 
 
 

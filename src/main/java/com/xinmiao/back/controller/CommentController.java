@@ -1,9 +1,11 @@
 package com.xinmiao.back.controller;
 
 import com.xinmiao.back.domain.Comment;
+import com.xinmiao.back.domain.Company;
 import com.xinmiao.back.domain.SubComment;
 import com.xinmiao.back.domain.User;
 import com.xinmiao.back.mapper.CommentMapper;
+import com.xinmiao.back.mapper.CompanyMapper;
 import com.xinmiao.back.mapper.SubCommentMapper;
 import com.xinmiao.back.mapper.UserMapper;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +25,8 @@ public class CommentController {
     SubCommentMapper subCommentMapper;
     @Resource
     UserMapper userMapper;
+    @Resource
+    CompanyMapper companyMapper;
 
     @RequestMapping(value = "",method = RequestMethod.POST)
     public Boolean comment(@RequestBody CommentController comment){
@@ -36,8 +40,15 @@ public class CommentController {
 
 
     @RequestMapping(value = "",method = RequestMethod.GET)
-    public List<Map<String,Object>> getCommentByCompanyId(@RequestParam Integer id){
-        List<Comment> comments = commentMapper.selectCommentsByCompanyId(id);
+    public List<Map<String,Object>> getCommentByCompanyId(Integer id,String name){
+        List<Comment> comments;
+        if(id == null){
+            User user = userMapper.selectByWx(name);
+            Company company = companyMapper.selectByUserId(user.getUserId());
+            comments = commentMapper.selectCommentsByCompanyId(company.getCompanyId());
+        }else{
+           comments = commentMapper.selectCommentsByCompanyId(id);
+        }
         System.out.println("id = " + id);
         System.out.println(comments);
 
@@ -54,4 +65,6 @@ public class CommentController {
         }
         return coms;
     }
+
+
 }

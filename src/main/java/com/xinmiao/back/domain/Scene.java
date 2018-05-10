@@ -6,6 +6,7 @@ import java.util.List;
 public class Scene {
     @Id
     @Column(name = "scene_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer sceneId;
 
     @Column(name = "scene_name")

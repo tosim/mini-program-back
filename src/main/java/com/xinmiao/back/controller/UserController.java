@@ -20,7 +20,7 @@ import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 
-@Controller
+@RestController
 @RequestMapping("/api/users")
 public class UserController extends ExceptionHandledController {
     @Resource
@@ -29,7 +29,7 @@ public class UserController extends ExceptionHandledController {
     private UserService userService;
 
     @RequestMapping(value = "",method = RequestMethod.POST)
-    public String register(/*@RequestBody*/ RegisterUser registerUser){
+    public RespJson register(@RequestBody RegisterUser registerUser){
         RespJson respJson = new RespJson(null,"",200);
         if(userService.register(registerUser)){
             Subject subject = SecurityUtils.getSubject();
@@ -42,6 +42,6 @@ public class UserController extends ExceptionHandledController {
             respJson.setMsg(AuthorStatus.REGISTER_FAILED_REPEATED_ACCOUNT.name());
             respJson.setCode(AuthorStatus.REGISTER_FAILED_REPEATED_ACCOUNT.getCode());
         }
-        return null;
+        return new RespJson("","register ok",200);
     }
 }

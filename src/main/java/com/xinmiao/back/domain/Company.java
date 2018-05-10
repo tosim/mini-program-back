@@ -5,6 +5,7 @@ import javax.persistence.*;
 public class Company {
     @Id
     @Column(name = "company_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer companyId;
 
     @Column(name = "company_name")
